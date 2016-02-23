@@ -9,8 +9,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.garfhackers.soundloud.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/buttonsContainer"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true">
+        <Button
+            android:id="@+id/hostButton"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Host"
+             />
+        <Button
+            android:id="@+id/joinButton"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Join"
+            />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/devicesListView"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/buttonsContainer"
+        />
 </RelativeLayout>
