@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.garfhackers.soundloud">
+    package="com.personal.neelesh.soundloud">
+
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission
+        android:required="true"
+        android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"

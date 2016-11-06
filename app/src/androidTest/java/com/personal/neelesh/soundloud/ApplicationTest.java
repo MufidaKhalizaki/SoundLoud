@@ -1,4 +1,4 @@
-package com.garfhackers.soundloud;
+package com.personal.neelesh.soundloud;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
