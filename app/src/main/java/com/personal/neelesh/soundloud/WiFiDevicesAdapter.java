@@ -2,6 +2,7 @@ package com.personal.neelesh.soundloud;
 
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class WiFiDevicesAdapter extends BaseAdapter implements ListAdapter {
+public class WiFiDevicesAdapter extends BaseAdapter {
 
     ArrayList<WifiP2pDevice> deviceArrayList;
     LayoutInflater myLayoutInflater = null;
     Context context;
 
     public WiFiDevicesAdapter (Context context, ArrayList<WifiP2pDevice> deviceArrayList) {
-        myLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
+        this.myLayoutInflater = LayoutInflater.from(this.context);
         this.deviceArrayList = deviceArrayList;
+        Log.d("device list size", String.valueOf(this.deviceArrayList.size()));
     }
 
     @Override
@@ -51,8 +53,8 @@ public class WiFiDevicesAdapter extends BaseAdapter implements ListAdapter {
             holder = (ViewHolder) v.getTag();
         }
 
-        holder.setDeviceName(deviceArrayList.get(position).deviceName);
-        holder.setDeviceAddress(deviceArrayList.get(position).deviceAddress);
+        holder.setDeviceName(position);
+        holder.setDeviceAddress(position);
         return v;
     }
 
@@ -78,12 +80,12 @@ public class WiFiDevicesAdapter extends BaseAdapter implements ListAdapter {
             view_deviceName = (TextView) v.findViewById(R.id.deviceName);
         }
 
-        public void setDeviceName(String deviceName){
-            view_deviceName.setText(deviceName);
+        public void setDeviceName(int position){
+            view_deviceName.setText(deviceArrayList.get(position).deviceName);
         }
 
-        public void setDeviceAddress(String deviceAddress) {
-            view_deviceName.setText(deviceAddress);
+        public void setDeviceAddress(int position) {
+            view_deviceAddress.setText(deviceArrayList.get(position).deviceAddress);
         }
     }
 }

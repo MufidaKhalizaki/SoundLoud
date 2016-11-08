@@ -32,8 +32,6 @@ public class WiFiDirectServicesList extends Fragment {
         if (getArguments() != null) {
 
         }
-//        adapter = new WiFiDevicesAdapter(getActivity());
-//        setListAdapter(adapter);
     }
 
     @Override
@@ -43,9 +41,9 @@ public class WiFiDirectServicesList extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.deviceslistView);
         ArrayList<WifiP2pDevice> deviceArrayList = new ArrayList<WifiP2pDevice>();
-        adapter = new WiFiDevicesAdapter(getActivity(), deviceArrayList);
+        adapter = new WiFiDevicesAdapter(getActivity().getBaseContext(), deviceArrayList);
         listView.setAdapter(adapter);
-        return inflater.inflate(R.layout.fragment_wifidirectserviceslist_list, container, false);
+        return view;
     }
 
     public ListAdapter getListAdapter() {
