@@ -10,10 +10,26 @@
     tools:context="com.personal.neelesh.soundloud.MainActivity"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textview_hello_user"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            android:textSize="25sp"/>
+        <Button
+            android:id="@+id/button_add_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Add Name"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

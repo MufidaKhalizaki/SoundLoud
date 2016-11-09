@@ -1,20 +1,25 @@
 package com.personal.neelesh.soundloud;
 
+import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private static final int SERVER_PORT = 3736;
     private WifiP2pManager mManager;
@@ -25,12 +30,23 @@ public class MainActivity extends FragmentActivity {
     private WiFiDirectBroadcastReceiver receiver;
 
     private final String TAG = String.valueOf(MainActivity.class);
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        addActionsToIntentFilter();
+
+        setupUI();
+
+
+        mManager = (WifiP2pManager) getSystemService(WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+    }
+
+    private void addActionsToIntentFilter() {
         //  Indicates a change in the Wi-Fi P2P status.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 
@@ -42,31 +58,12 @@ public class MainActivity extends FragmentActivity {
 
         // Indicates this device's details have changed.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        Button host_button = (Button) findViewById(R.id.button_host);
-        Button discover_button = (Button) findViewById(R.id.button_discover);
-
-        host_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startRegistration();
-            }
-        });
-        discover_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                discoverService();
-            }
-        });
-
-        mManager = (WifiP2pManager) getSystemService(WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
     }
 
     private void startRegistration() {
         Map record = new HashMap();
         record.put("listenport", String.valueOf(SERVER_PORT));
-        record.put("buddyname", "John Doe" + (int) (Math.random() * 1000));
+        record.put("buddyname", username);
         record.put("available", "visible");
 
 
@@ -178,5 +175,75 @@ public class MainActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    public void openNameDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText editText = new EditText(this);
+        editText.setPadding(40, 20, 40, 20);
+        editText.setHint("This will be used to display to other users");
+        builder.setTitle("Add Your Name")
+                .setView(editText)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveUserName(String.valueOf(editText.getText()));
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void saveUserName(String username) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("username",username);
+        editor.commit();
+        setUsername();
+    }
+
+    public void setupUI(){
+        setUsername();
+        addButtonOnClickListeners();
+    }
+
+    public void addButtonOnClickListeners() {
+        Button host_button = (Button) findViewById(R.id.button_host);
+        Button discover_button = (Button) findViewById(R.id.button_discover);
+        Button add_name_button = (Button) findViewById(R.id.button_add_name);
+
+        add_name_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNameDialog();
+            }
+        });
+        host_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRegistration();
+            }
+        });
+        discover_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                discoverService();
+            }
+        });
+    }
+
+    public void setUsername() {
+        username = getUsername();
+        TextView textView = (TextView) findViewById(R.id.textview_hello_user);
+        textView.setText("Hello " + username + " !");
+    }
+
+    public String getUsername() {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        username  = preferences.getString("username", "");
+        if (username.equals("")) {
+            username = "John Doe" + (int) (Math.random() * 1000);
+        }
+        return username;
     }
 }
