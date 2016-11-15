@@ -3,7 +3,10 @@ package com.personal.neelesh.soundloud;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.wifi.WpsInfo;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
@@ -16,14 +19,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private static final int SERVER_PORT = 3736;
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
+    private WifiP2pManager.ConnectionInfoListener connectionInfoListener;
     private HashMap<String, String> buddies = new HashMap<>();
 
     private final IntentFilter intentFilter = new IntentFilter();
@@ -41,6 +46,25 @@ public class MainActivity extends AppCompatActivity {
 
         setupUI();
 
+        connectionInfoListener =  new WifiP2pManager.ConnectionInfoListener() {
+            @Override
+            public void onConnectionInfoAvailable(WifiP2pInfo info) {
+                // InetAddress from WifiP2pInfo struct.
+//        InetAddress groupOwnerAddress = info.groupOwnerAddress.getHostAddress();
+
+                // After the group negotiation, we can determine the group owner.
+                if (info.groupFormed && info.isGroupOwner) {
+                    // Do whatever tasks are specific to the group owner.
+                    // One common case is creating a server thread and accepting
+                    // incoming connections.
+                } else if (info.groupFormed) {
+                    // The other device acts as the client. In this case,
+                    // you'll want to create a client thread that connects to the group
+                    // owner.
+                }
+
+            }
+        };
 
         mManager = (WifiP2pManager) getSystemService(WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -167,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        receiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this, connectionInfoListener);
         registerReceiver(receiver, intentFilter);
     }
 
@@ -245,5 +269,23 @@ public class MainActivity extends AppCompatActivity {
             username = "John Doe" + (int) (Math.random() * 1000);
         }
         return username;
+    }
+
+    public void connect (WifiP2pDevice device) {
+        WifiP2pConfig config = new WifiP2pConfig();
+        config.deviceAddress = device.deviceAddress;
+        config.wps.setup = WpsInfo.PBC;
+
+        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Utility.showToast(getBaseContext(), "Connect successful");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Utility.showToast(getBaseContext(), "Connect Failed. Retry");
+            }
+        });
     }
 }

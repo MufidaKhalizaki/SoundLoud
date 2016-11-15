@@ -45,6 +45,9 @@ public class WiFiDirectServicesList extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Utility.showToast(getActivity().getBaseContext(), position + " clicked");
+        WifiP2pDevice device = ((WiFiDevicesAdapter)adapter).getDeviceAtPosition(position);
+
+        ((MainActivity) getActivity()).connect(device);
     }
 
     @Override

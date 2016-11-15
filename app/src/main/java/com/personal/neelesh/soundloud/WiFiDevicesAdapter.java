@@ -14,9 +14,9 @@ import java.util.ArrayList;
 
 public class WiFiDevicesAdapter extends BaseAdapter {
 
-    ArrayList<WifiP2pDevice> deviceArrayList;
-    LayoutInflater myLayoutInflater = null;
-    Context context;
+    private ArrayList<WifiP2pDevice> deviceArrayList;
+    private LayoutInflater myLayoutInflater = null;
+    private Context context;
 
     public WiFiDevicesAdapter (Context context, ArrayList<WifiP2pDevice> deviceArrayList) {
         this.context = context;
@@ -62,14 +62,8 @@ public class WiFiDevicesAdapter extends BaseAdapter {
         deviceArrayList.add(device);
     }
 
-    public ArrayList<WifiP2pDevice> getDeviceArrayList () {
-        return deviceArrayList;
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        Utility.showToast(context, "notified");
+    public WifiP2pDevice getDeviceAtPosition(int position) {
+        return deviceArrayList.get(position);
     }
 
     class ViewHolder {
