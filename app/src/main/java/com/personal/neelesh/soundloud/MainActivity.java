@@ -1,6 +1,7 @@
 package com.personal.neelesh.soundloud;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WpsInfo;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity{
     private final IntentFilter intentFilter = new IntentFilter();
     private WiFiDirectBroadcastReceiver receiver;
 
-    private final String TAG = String.valueOf(MainActivity.class);
+    public static final String TAG = String.valueOf(MainActivity.class);
     private String username;
 
     @Override
@@ -280,6 +281,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onSuccess() {
                 Utility.showToast(getBaseContext(), "Connect successful");
+                Intent intent = new Intent(getBaseContext(), StreamActivity.class);
+
+                startActivity(intent);
             }
 
             @Override
