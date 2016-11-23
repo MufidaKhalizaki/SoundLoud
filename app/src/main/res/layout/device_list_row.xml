@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/deviceName"
@@ -15,11 +16,11 @@
         />
 
     <TextView
-        android:id="@+id/deviceAddress"
+        android:id="@+id/deviceStatus"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:text="Device Address"
+        android:text="Device Status"
         android:gravity="center"
         />
 </LinearLayout>

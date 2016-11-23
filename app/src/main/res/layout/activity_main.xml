@@ -53,13 +53,18 @@
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
     </LinearLayout>
 
-    <fragment android:name="com.personal.neelesh.soundloud.WiFiDirectServicesList"
+    <fragment android:name="com.personal.neelesh.soundloud.DeviceListFragment"
         android:id="@+id/deviceListFragment"
-        android:layout_weight="1"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/phone_list_height"
         android:tag="DeviceListFragment"
-        android:layout_height="0dp"
-        tools:layout="@layout/fragment_wifidirectserviceslist_list" />
+        tools:layout="@layout/fragment_device_list" />
 
-
+    <fragment
+        android:id="@+id/deviceDetailFragment"
+        android:tag="DeviceDetailFragment"
+        android:name="com.personal.neelesh.soundloud.DeviceDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_device_detail" />
 </LinearLayout>

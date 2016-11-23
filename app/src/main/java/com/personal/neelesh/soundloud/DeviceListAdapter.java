@@ -7,18 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class WiFiDevicesAdapter extends BaseAdapter {
+public class DeviceListAdapter extends BaseAdapter {
 
     private ArrayList<WifiP2pDevice> deviceArrayList;
     private LayoutInflater myLayoutInflater = null;
     private Context context;
 
-    public WiFiDevicesAdapter (Context context, ArrayList<WifiP2pDevice> deviceArrayList) {
+    public DeviceListAdapter(Context context, ArrayList<WifiP2pDevice> deviceArrayList) {
         this.context = context;
         this.myLayoutInflater = LayoutInflater.from(this.context);
         this.deviceArrayList = deviceArrayList;
@@ -46,7 +45,7 @@ public class WiFiDevicesAdapter extends BaseAdapter {
 
         ViewHolder holder;
         if (convertView == null) {
-            v  = myLayoutInflater.inflate(R.layout.fragment_wifidirectserviceslist,parent, false);
+            v  = myLayoutInflater.inflate(R.layout.device_list_row,parent, false);
             holder = new ViewHolder(v);
             v.setTag(holder);
         } else {
@@ -54,12 +53,35 @@ public class WiFiDevicesAdapter extends BaseAdapter {
         }
 
         holder.setDeviceName(position);
-        holder.setDeviceAddress(position);
+        holder.setDeviceStatus(position);
         return v;
     }
 
     public void add(WifiP2pDevice device){
         deviceArrayList.add(device);
+    }
+
+    private String getDeviceStatus(int position) {
+        int deviceStatus = getDevice(position).status;
+        Log.d("Device List Adapter", "Peer status :" + deviceStatus);
+        switch (deviceStatus) {
+            case WifiP2pDevice.AVAILABLE:
+                return "Available";
+            case WifiP2pDevice.INVITED:
+                return "Invited";
+            case WifiP2pDevice.CONNECTED:
+                return "Connected";
+            case WifiP2pDevice.FAILED:
+                return "Failed";
+            case WifiP2pDevice.UNAVAILABLE:
+                return "Unavailable";
+            default:
+                return "Unknown";
+        }
+    }
+
+    private WifiP2pDevice getDevice(int position) {
+        return deviceArrayList.get(position);
     }
 
     public WifiP2pDevice getDeviceAtPosition(int position) {
@@ -68,18 +90,18 @@ public class WiFiDevicesAdapter extends BaseAdapter {
 
     class ViewHolder {
         public TextView view_deviceName;
-        public TextView view_deviceAddress;
+        public TextView view_deviceStatus;
         public ViewHolder (View v){
-            view_deviceAddress = (TextView) v.findViewById(R.id.deviceAddress);
+            view_deviceStatus = (TextView) v.findViewById(R.id.deviceStatus);
             view_deviceName = (TextView) v.findViewById(R.id.deviceName);
         }
 
         public void setDeviceName(int position){
-            view_deviceName.setText(deviceArrayList.get(position).deviceName);
+            view_deviceName.setText(getDevice(position).deviceName);
         }
 
-        public void setDeviceAddress(int position) {
-            view_deviceAddress.setText(deviceArrayList.get(position).deviceAddress);
+        public void setDeviceStatus(int position) {
+            view_deviceStatus.setText(getDeviceStatus(position));
         }
     }
 }
